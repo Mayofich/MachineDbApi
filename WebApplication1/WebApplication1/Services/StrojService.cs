@@ -45,7 +45,7 @@ namespace WebApplication1.Services
 
         public async Task<bool> DeleteStroj(int id_stroja)
         {
-            var deleteStroj = await _dbService.EditData("DELETE FROM public.\"STROJEVI\" WHERE \"ID_STROJA\"=@Id_stroja", new { id_stroja });
+            var deleteStroj = await _dbService.EditData("DELETE FROM public.\"STROJEVI\" WHERE \"ID_STROJA\"=@Id", new { id_stroja });
             return true;
         }
     }
