@@ -14,10 +14,14 @@ namespace WebApplication1.Services
 
         public async Task<bool> CreateStroj(Stroj stroj)
         {
-            var result =
+            var strojList = await _dbService.GetAsync<Stroj>("SELECT * FROM public.\"STROJEVI\" where \"NAZIV_STROJA\"=@Naziv_stroja", stroj);
+            if (strojList == null)
+            {
+                var result =
                 await _dbService.EditData(
                     "INSERT INTO public.\"STROJEVI\" (\"ID_STROJA\",\"NAZIV_STROJA\") VALUES (@Id_stroja, @Naziv_stroja)",
                     stroj);
+            }
             return true;
         }
 
@@ -45,7 +49,7 @@ namespace WebApplication1.Services
 
         public async Task<bool> DeleteStroj(int id_stroja)
         {
-            var deleteStroj = await _dbService.EditData("DELETE FROM public.\"STROJEVI\" WHERE \"ID_STROJA\"=@Id", new { id_stroja });
+            var deleteStroj = await _dbService.EditData("DELETE FROM public.\"STROJEVI\" WHERE \"ID_STROJA\"=@Id_stroja", new { id_stroja });
             return true;
         }
     }
