@@ -40,10 +40,14 @@ namespace WebApplication1.Services
 
         public async Task<Stroj> UpdateStroj(Stroj stroj)
         {
-            var updateStroj =
+            var strojList = await _dbService.GetAsync<Stroj>("SELECT * FROM public.\"STROJEVI\" where \"NAZIV_STROJA\"=@Naziv_stroja", stroj);
+            if (strojList == null)
+            {
+                var updateStroj =
                 await _dbService.EditData(
                     "Update public.\"STROJEVI\" SET \"NAZIV_STROJA\"=@Naziv_stroja WHERE \"ID_STROJA\"=@Id_stroja",
                     stroj);
+            }
             return stroj;
         }
 
