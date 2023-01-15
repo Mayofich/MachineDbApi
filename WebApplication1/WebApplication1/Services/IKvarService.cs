@@ -6,7 +6,7 @@ namespace WebApplication1.Services
     {
         Task<bool> CreateKvar(Kvar kvar);
         Task<List<Kvar>> GetKvarList();
-        Task<List<Kvar>> GetKvar(int id_stroja);
+        Task<StrojIspis> GetKvar(int id_stroja);
         Task<Kvar> UpdateKvar(Kvar kvar);
         Task<bool> DeleteKvar(int key);
     }

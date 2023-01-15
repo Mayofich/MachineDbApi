@@ -23,10 +23,10 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetStroj(int id)
+        [HttpGet("{id_stroja:int}")]
+        public async Task<IActionResult> GetStroj(int id_stroja)
         {
-            var result = await _strojService.GetStroj(id);
+            var result = await _strojService.GetStroj(id_stroja);
 
             return Ok(result);
         }

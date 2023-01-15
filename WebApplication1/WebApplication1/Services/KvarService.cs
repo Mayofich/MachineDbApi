@@ -28,10 +28,27 @@ namespace WebApplication1.Services
         }
 
 
-        public async Task<List<Kvar>> GetKvar(int id_stroja)
+        public async Task<StrojIspis> GetKvar(int id_stroja)
         {
             var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_STROJA\"=@id_stroja", new { id_stroja });
-            return kvarList;
+            var strojIspis = new StrojIspis();
+            var stroj1 = await _dbService.GetAsync<Stroj>("SELECT \"NAZIV_STROJA\" FROM public.\"STROJEVI\" where \"ID_STROJA\"=@id_stroja", new { id_stroja });
+            strojIspis.Naziv_stroja = stroj1.Naziv_stroja;
+            strojIspis.Ukupno_trajanje_kvarova = new TimeSpan(0,0,0,0);
+            foreach (var kvar in kvarList)
+            {
+                if (kvar.Vrijeme_zavrsetka != null)
+                {
+                    DateTime VrijemeZ = kvar.Vrijeme_zavrsetka.Value;
+                    strojIspis.Ukupno_trajanje_kvarova += VrijemeZ - kvar.Vrijeme_pocetka;
+                }
+                else
+                {
+                    strojIspis.Ukupno_trajanje_kvarova +=  DateTime.Now - kvar.Vrijeme_pocetka;
+                }
+            }
+            strojIspis.kvarovi = kvarList;
+            return strojIspis;
         }
 
         public async Task<Kvar> UpdateKvar(Kvar kvar)

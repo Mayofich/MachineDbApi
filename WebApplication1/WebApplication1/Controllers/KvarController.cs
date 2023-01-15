@@ -23,10 +23,10 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetKvar(int id)
+        [HttpGet("{id_stroja:int}")]
+        public async Task<IActionResult> GetKvar(int id_stroja)
         {
-            var result = await _kvarService.GetKvar(id);
+            var result = await _kvarService.GetKvar(id_stroja);
 
             return Ok(result);
         }
