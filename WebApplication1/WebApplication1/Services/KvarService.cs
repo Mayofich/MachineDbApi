@@ -12,12 +12,32 @@ namespace WebApplication1.Services
             _dbService = dbService;
         }
 
-        public async Task<bool> CreateKvar(Kvar kvar)
+        public async Task<bool> CreateKvar(KvarCreate kvar)
         {
-            var result =
+            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\"", new { });
+            var kvarList1 = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_STROJA\"=@Id_stroja", kvar.Id_stroja);
+            bool check = true;
+            foreach (Kvar kvar2 in kvarList1)
+            { if (kvar2.Aktivan_kvar == true)
+                    check = false;
+            }
+            if (kvar.Detaljni_opis == null & check)
+            {
+                Kvar kvar1 = new Kvar();
+                kvar1.Naziv_kvara = kvar.Naziv_kvara;
+                kvar1.Id_stroja = kvar.Id_stroja;
+                kvar1.Vrijeme_pocetka = kvar.Vrijeme_pocetka;
+                kvar1.Vrijeme_zavrsetka = kvar.Vrijeme_zavrsetka;
+                kvar1.Prioritet = kvar.Prioritet;
+                kvar1.Aktivan_kvar = kvar.Aktivan_kvar;
+                kvar1.Detaljni_opis = kvar.Detaljni_opis;
+                kvar1.Id_kvara = kvarList[kvarList.Count - 1].Id_kvara + 1;
+                
+                var result =
                 await _dbService.EditData(
-                    "INSERT INTO public.\"KVAROVI\" (\"ID_KVARA\",\"NAZIV_KVARA\") VALUES (@Id_kvara, @Naziv_kvara)",
-                    kvar);
+                    "INSERT INTO public.\"KVAROVI\" (\"ID_KVARA\",\"ID_STROJA\",\"NAZIV_KVARA\",\"PRIORITET\",\"VRIJEME_POCETKA\",\"VRIJEME_ZAVRSETKA\",\"DETALJNI_OPIS\",\"AKTIVAN_KVAR\") VALUES (@Id_kvara, @Id_stroja, @Naziv_kvara, @Prioritet, @Vrijeme_pocetka, @Vrijeme_zavrsetka, @Detaljan_opis, @Aktivan_kvar)",
+                    kvar1);
+            }
             return true;
         }
 
@@ -28,27 +48,11 @@ namespace WebApplication1.Services
         }
 
 
-        public async Task<StrojIspis> GetKvar(int id_stroja)
+        public async Task<Kvar> GetKvar(int id_kvara)
         {
-            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_STROJA\"=@id_stroja", new { id_stroja });
-            var strojIspis = new StrojIspis();
-            var stroj1 = await _dbService.GetAsync<Stroj>("SELECT \"NAZIV_STROJA\" FROM public.\"STROJEVI\" where \"ID_STROJA\"=@id_stroja", new { id_stroja });
-            strojIspis.Naziv_stroja = stroj1.Naziv_stroja;
-            strojIspis.Ukupno_trajanje_kvarova = new TimeSpan(0,0,0,0);
-            foreach (var kvar in kvarList)
-            {
-                if (kvar.Vrijeme_zavrsetka != null)
-                {
-                    DateTime VrijemeZ = kvar.Vrijeme_zavrsetka.Value;
-                    strojIspis.Ukupno_trajanje_kvarova += VrijemeZ - kvar.Vrijeme_pocetka;
-                }
-                else
-                {
-                    strojIspis.Ukupno_trajanje_kvarova +=  DateTime.Now - kvar.Vrijeme_pocetka;
-                }
-            }
-            strojIspis.kvarovi = kvarList;
-            return strojIspis;
+            var kvar = await _dbService.GetAsync<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_KVARA\"=@id_kvara", new { id_kvara });
+           
+            return kvar;
         }
 
         public async Task<Kvar> UpdateKvar(Kvar kvar)

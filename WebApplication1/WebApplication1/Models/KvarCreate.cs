@@ -1,8 +1,7 @@
 ﻿namespace WebApplication1.Models
 {
-    public class Kvar
+    public class KvarCreate
     {
-        public int Id_kvara { get; set; }
         public int Id_stroja { get; set; }
         public string Naziv_kvara { get; set; }
         public string Prioritet { get; set; }

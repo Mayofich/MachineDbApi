@@ -32,9 +32,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStroj([FromBody] Stroj stroj)
+        public async Task<IActionResult> AddStroj([FromBody] string naziv_stroja)
         {
-            var result = await _strojService.CreateStroj(stroj);
+            var result = await _strojService.CreateStroj(naziv_stroja);
 
             return Ok(result);
         }
