@@ -1,5 +1,7 @@
 ﻿using WebApplication1.Services;
 using WebApplication1.Models;
+using System.Collections.Generic;
+using WebApplication1.Controllers;
 
 namespace WebApplication1.Services
 {
@@ -46,7 +48,11 @@ namespace WebApplication1.Services
             var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\"", new { });
             return kvarList;
         }
-
+        public async Task<List<Kvar>> GetKvarPagination(int limit, int offset)
+        {
+            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM PUBLIC.\"KVAROVI\" ORDER BY \"PRIORITET\", \"VRIJEME_POCETKA\" DESC LIMIT @limit OFFSET 1", new {limit});
+            return kvarList;
+        }
 
         public async Task<Kvar> GetKvar(int id_kvara)
         {
@@ -59,14 +65,26 @@ namespace WebApplication1.Services
         {
             var updateKvar =
                 await _dbService.EditData(
-                    "Update public.\"KVAROVI\" SET \"NAZIV_KVARA\"=@Naziv_kvara WHERE \"ID_KVARA\"=@Id_kvara",
+                    "Update public.\"KVAROVI\" SET \"ID_STROJA\"=@Id_stroja,\"NAZIV_KVARA\"=@Naziv_Kvara,\"PRIORITET\"=@Prioritet,\"VRIJEME_POCETKA\"=@Vrijeme_pocetka,\"VRIJEME_ZAVRSETKA\"=@Vrijeme_zavrsetka,\"DETALJNI_OPIS\"=@Detaljni_opis,\"AKTIVAN_KVAR\"=@Aktivan_kvar WHERE \"ID_KVARA\"=@Id_kvara",
+                    kvar);
+            return kvar;
+        }
+        public async Task<Kvar> UpdateStatus(KvarStatusChange kvarStatus)
+        {   
+            var kvar = await _dbService.GetAsync<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_KVARA\"=@Id_kvara", kvarStatus);
+            kvar.Vrijeme_zavrsetka = kvarStatus.Vrijeme_zavrsetka;
+            kvar.Aktivan_kvar = false;
+            var updateKvar =
+                await _dbService.EditData(
+                    "Update public.\"KVAROVI\" SET \"VRIJEME_ZAVRSETKA\"=@Vrijeme_zavrsetka,\"AKTIVAN_KVAR\"=@Aktivan_kvar where \"ID_KVARA\"=@Id_kvara",
                     kvar);
             return kvar;
         }
 
+
         public async Task<bool> DeleteKvar(int id_kvara)
         {
-            var deleteKvar = await _dbService.EditData("DELETE FROM public.\"KVAROVI\" WHERE \"ID_KVARA\"=@Id", new { id_kvara });
+            var deleteKvar = await _dbService.EditData("DELETE FROM public.\"KVAROVI\" WHERE \"ID_KVARA\"=@id_kvara", new { id_kvara });
             return true;
         }
     }

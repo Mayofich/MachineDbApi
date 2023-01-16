@@ -47,6 +47,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteKvar(int id)
         {
