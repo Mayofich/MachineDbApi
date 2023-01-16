@@ -25,8 +25,12 @@ namespace WebApplication1.Services
                 await _dbService.EditData(
                     "INSERT INTO public.\"STROJEVI\" (\"ID_STROJA\",\"NAZIV_STROJA\") VALUES (@Id_stroja, @Naziv_stroja)",
                     stroj);
+                return true;
             }
-            return true;
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<List<Stroj>> GetStrojList()

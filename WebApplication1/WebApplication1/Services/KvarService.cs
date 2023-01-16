@@ -17,19 +17,27 @@ namespace WebApplication1.Services
         public async Task<bool> CreateKvar(KvarCreate kvar)
         {
             var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\"", new { });
-            var kvarList1 = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_STROJA\"=@Id_stroja", kvar.Id_stroja);
+            var kvarList1 = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\" where \"ID_STROJA\"=@Id_stroja", kvar);
             bool check = true;
             foreach (Kvar kvar2 in kvarList1)
             { if (kvar2.Aktivan_kvar == true)
                     check = false;
             }
-            if (kvar.Detaljni_opis == null & check)
+
+            if (kvar.Detaljni_opis != null & check)
             {
                 Kvar kvar1 = new Kvar();
+                if (kvar.Aktivan_kvar == true)
+                {
+                    kvar1.Vrijeme_zavrsetka = null;
+                }
+                else 
+                {
+                    kvar1.Vrijeme_zavrsetka = DateTime.Now;
+                }
                 kvar1.Naziv_kvara = kvar.Naziv_kvara;
                 kvar1.Id_stroja = kvar.Id_stroja;
                 kvar1.Vrijeme_pocetka = kvar.Vrijeme_pocetka;
-                kvar1.Vrijeme_zavrsetka = kvar.Vrijeme_zavrsetka;
                 kvar1.Prioritet = kvar.Prioritet;
                 kvar1.Aktivan_kvar = kvar.Aktivan_kvar;
                 kvar1.Detaljni_opis = kvar.Detaljni_opis;
@@ -37,10 +45,13 @@ namespace WebApplication1.Services
                 
                 var result =
                 await _dbService.EditData(
-                    "INSERT INTO public.\"KVAROVI\" (\"ID_KVARA\",\"ID_STROJA\",\"NAZIV_KVARA\",\"PRIORITET\",\"VRIJEME_POCETKA\",\"VRIJEME_ZAVRSETKA\",\"DETALJNI_OPIS\",\"AKTIVAN_KVAR\") VALUES (@Id_kvara, @Id_stroja, @Naziv_kvara, @Prioritet, @Vrijeme_pocetka, @Vrijeme_zavrsetka, @Detaljan_opis, @Aktivan_kvar)",
+                    "INSERT INTO public.\"KVAROVI\" (\"ID_KVARA\",\"ID_STROJA\",\"NAZIV_KVARA\",\"PRIORITET\",\"VRIJEME_POCETKA\",\"VRIJEME_ZAVRSETKA\",\"DETALJNI_OPIS\",\"AKTIVAN_KVAR\") VALUES (@Id_kvara, @Id_stroja, @Naziv_kvara, @Prioritet, @Vrijeme_pocetka, @Vrijeme_zavrsetka, @Detaljni_opis, @Aktivan_kvar)",
                     kvar1);
+
+                return true;
             }
-            return true;
+            else
+            { return false; }
         }
 
         public async Task<List<Kvar>> GetKvarList()
