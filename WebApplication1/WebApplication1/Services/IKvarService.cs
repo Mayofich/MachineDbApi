@@ -6,10 +6,11 @@ namespace WebApplication1.Services
     {
         Task<bool> CreateKvar(KvarCreate kvar);
         Task<List<Kvar>> GetKvarList();
-        Task<List<Kvar>> GetKvarPagination(int limit, int offset);
+        Task<List<Kvar>> GetKvarPagination(int limit );
         Task<Kvar> GetKvar(int id_stroja);
         Task<Kvar> UpdateKvar(Kvar kvar);
         Task<Kvar> UpdateStatus(KvarStatusChange kvarStatus);
+        Task<List<Kvar>> UpdatePagination(KvarPagination kvarPagination);
         Task<bool> DeleteKvar(int key);
     }
 }

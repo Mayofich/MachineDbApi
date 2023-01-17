@@ -59,9 +59,9 @@ namespace WebApplication1.Services
             var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM public.\"KVAROVI\"", new { });
             return kvarList;
         }
-        public async Task<List<Kvar>> GetKvarPagination(int limit, int offset)
+        public async Task<List<Kvar>> GetKvarPagination(int limit)
         {
-            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM PUBLIC.\"KVAROVI\" ORDER BY \"PRIORITET\", \"VRIJEME_POCETKA\" DESC LIMIT @limit OFFSET 1", new {limit});
+            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM PUBLIC.\"KVAROVI\" ORDER BY \"PRIORITET\", \"VRIJEME_POCETKA\" DESC LIMIT @limit OFFSET 0", new {limit});
             return kvarList;
         }
 
@@ -91,7 +91,11 @@ namespace WebApplication1.Services
                     kvar);
             return kvar;
         }
-
+        public async Task<List<Kvar>> UpdatePagination(KvarPagination kvarPagination)
+        {
+            var kvarList = await _dbService.GetAll<Kvar>("SELECT * FROM PUBLIC.\"KVAROVI\" ORDER BY \"PRIORITET\", \"VRIJEME_POCETKA\" DESC LIMIT @Limit OFFSET @Offset", kvarPagination);
+            return kvarList;
+        }
 
         public async Task<bool> DeleteKvar(int id_kvara)
         {
