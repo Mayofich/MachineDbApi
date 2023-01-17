@@ -23,16 +23,16 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetKvar(int id)
+        [HttpGet("{id_kvara:int}")]
+        public async Task<IActionResult> GetKvar(int id_kvara)
         {
-            var result = await _kvarService.GetKvar(id);
+            var result = await _kvarService.GetKvar(id_kvara);
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddKvar([FromBody] Kvar kvar)
+        public async Task<IActionResult> AddKvar([FromBody] KvarCreate kvar)
         {
             var result = await _kvarService.CreateKvar(kvar);
 
@@ -46,6 +46,7 @@ namespace WebApplication1.Controllers
 
             return Ok(result);
         }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteKvar(int id)

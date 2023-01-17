@@ -23,18 +23,18 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetStroj(int id)
+        [HttpGet("{id_stroja:int}")]
+        public async Task<IActionResult> GetStroj(int id_stroja)
         {
-            var result = await _strojService.GetStroj(id);
+            var result = await _strojService.GetStroj(id_stroja);
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStroj([FromBody] Stroj stroj)
+        public async Task<IActionResult> AddStroj([FromBody] string naziv_stroja)
         {
-            var result = await _strojService.CreateStroj(stroj);
+            var result = await _strojService.CreateStroj(naziv_stroja);
 
             return Ok(result);
         }

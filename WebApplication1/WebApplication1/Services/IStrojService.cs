@@ -4,9 +4,9 @@ namespace WebApplication1.Services
 {
     public interface IStrojService
     {
-        Task<bool> CreateStroj(Stroj stroj);
+        Task<bool> CreateStroj(string naziv_stroja);
         Task<List<Stroj>> GetStrojList();
-        Task<Stroj> GetStroj(int id_stroja);
+        Task<StrojIspis> GetStroj(int id_stroja);
         Task<Stroj> UpdateStroj(Stroj stroj);
         Task<bool> DeleteStroj(int key);
     }
